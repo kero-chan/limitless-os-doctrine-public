@@ -1,0 +1,50 @@
+{
+  "id": "mvp3",
+  "version": "0.1.0-draft",
+  "grid": {
+    "cols": 6,
+    "rows": [5, 5, 5, 5, 5, 5]
+  },
+  "reels": [
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
+    [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]]
+  ],
+  "paytable": {
+    "H1": { "3": 1.0, "4":  5, "5":  20, "6": 100 },
+    "H2": { "3": 0.8, "4":  4, "5":  16, "6":  80 },
+    "H3": { "3": 0.6, "4":  3, "5":  12, "6":  60 },
+    "L1": { "3": 0.4, "4":  2, "5":   8, "6":  40 },
+    "L2": { "3": 0.3, "4": 1.5, "5":   6, "6":  30 },
+    "L3": { "3": 0.2, "4":  1, "5":   4, "6":  20 },
+    "L4": { "3": 0.1, "4": 0.5, "5":   2, "6":  10 }
+  },
+  "scalar": 1.0,
+  "evaluation": "ways",
+  "anchor": "leftmost",
+  "k_min": 3,
+  "scatter": {
+    "enabled": true,
+    "counted_in_base": false
+  },
+  "cascade": {
+    "enabled": true,
+    "removal": "winning_only"
+  },
+  "wild": {
+    "enabled": true,
+    "substitutes": ["H1","H2","H3","L1","L2","L3","L4"],
+    "counts_as_win": false
+  },
+  "bet": {
+    "cost": 1.0,
+    "unit": "per_spin"
+  },
+  "pseudocode": "ways evaluation, leftmost, k_min=3. After winning evaluation, remove winning symbols, drop columns down, refill from reels, re-evaluate. Repeat until no win. Sum payouts across all cascade rounds. Scalar is auto-tuned to hit target_rtp.",
+  "target_rtp": 0.96,
+  "seed": 20260510,
+  "spins": 10000000
+}
