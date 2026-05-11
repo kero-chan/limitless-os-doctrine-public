@@ -1,9 +1,22 @@
 {
   "id": "mvp3",
-  "version": "0.1.0-draft",
+  "version": "0.2.0-draft",
+  "family": "dynamic_grid_ways_cascade",
+  "reference_games": ["Mahjong Ways 2", "Megaways (Big Time Gaming)", "Wild Swarm (Push Gaming)"],
   "grid": {
     "cols": 6,
-    "rows": [5, 5, 5, 5, 5, 5]
+    "rows_variable": true,
+    "row_min": 2,
+    "row_max": 7,
+    "row_distribution_comment": "Each spin, each column independently re-rolls its row height from this distribution. Heights chosen to deliver Mahjong-Ways-feel variance.",
+    "row_distribution": { "2": 0.04, "3": 0.12, "4": 0.22, "5": 0.28, "6": 0.22, "7": 0.12 },
+    "max_ways": 117649,
+    "min_ways": 64
+  },
+  "symbols": {
+    "high": ["H1", "H2", "H3"],
+    "low": ["L1", "L2", "L3", "L4"],
+    "special": ["WILD", "SCAT"]
   },
   "reels": [
     [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]],
@@ -14,37 +27,71 @@
     [["H1",1],["H2",2],["H3",3],["L1",6],["L2",8],["L3",10],["L4",12],["WILD",1],["SCAT",1]]
   ],
   "paytable": {
-    "H1": { "3": 1.0, "4":  5, "5":  20, "6": 100 },
-    "H2": { "3": 0.8, "4":  4, "5":  16, "6":  80 },
-    "H3": { "3": 0.6, "4":  3, "5":  12, "6":  60 },
-    "L1": { "3": 0.4, "4":  2, "5":   8, "6":  40 },
+    "comment": "Ways paytable. Payout = (ways_count) * (per_k payout) * (current cascade multiplier). Ways count = product of symbol counts per reel for the k reels hit from leftmost.",
+    "H1": { "3": 1.0, "4":   5, "5":  20, "6": 100 },
+    "H2": { "3": 0.8, "4":   4, "5":  16, "6":  80 },
+    "H3": { "3": 0.6, "4":   3, "5":  12, "6":  60 },
+    "L1": { "3": 0.4, "4":   2, "5":   8, "6":  40 },
     "L2": { "3": 0.3, "4": 1.5, "5":   6, "6":  30 },
-    "L3": { "3": 0.2, "4":  1, "5":   4, "6":  20 },
+    "L3": { "3": 0.2, "4":   1, "5":   4, "6":  20 },
     "L4": { "3": 0.1, "4": 0.5, "5":   2, "6":  10 }
   },
-  "scalar": 1.0,
   "evaluation": "ways",
   "anchor": "leftmost",
   "k_min": 3,
-  "scatter": {
-    "enabled": true,
-    "counted_in_base": false
-  },
   "cascade": {
     "enabled": true,
-    "removal": "winning_only"
+    "removal": "winning_only",
+    "refill": "drop_from_top_using_reel_strip",
+    "multiplier_ladder": {
+      "comment": "Base game ladder. Same shape as MVP #2 cluster cascade for design consistency.",
+      "levels": [1, 2, 3, 5, 10],
+      "cap": 10,
+      "sustain_at_cap": true
+    },
+    "regenerate_row_heights_each_cascade": true
+  },
+  "scatter": {
+    "enabled": true,
+    "counted_in_base": false,
+    "trigger_count": 4,
+    "trigger_award": { "free_spins": 12 },
+    "retrigger": { "min": 3, "add_free_spins": 5 }
+  },
+  "free_spins": {
+    "enabled": true,
+    "start_multiplier": 2,
+    "multiplier_behavior": "persistent_climbs_one_per_winning_cascade_never_resets_within_fs",
+    "reset_on_end": true,
+    "reference": "Mahjong Ways 2 free-spins escalator"
   },
   "wild": {
     "enabled": true,
     "substitutes": ["H1","H2","H3","L1","L2","L3","L4"],
     "counts_as_win": false
   },
-  "bet": {
-    "cost": 1.0,
-    "unit": "per_spin"
+  "bet": { "cost": 1.0, "unit": "per_spin" },
+  "anticipation_design": {
+    "player_state_map": {
+      "tension": "variable reel heights tease before each drop (which reel is going to be tall?)",
+      "initial_relief": "first ways win fires at 1x",
+      "building_hope": "multiplier climbs 2x -> 3x -> 5x AND row heights re-roll between cascades",
+      "peak_anticipation": "5+ cascade chain at 10x sustained with tall reels (high ways count)",
+      "climax": "high ways_count on H1 at 10x multiplier inside FS climbing multiplier (top hit potential ~8000-10000x bet)",
+      "re_engagement": "FS climbing multiplier never resets within FS session; long FS sessions are the dopamine reservoir"
+    },
+    "target_avg_cascades_per_winning_spin": 1.6,
+    "target_p_4plus_cascade": 0.004,
+    "target_fs_hit_rate": 0.0035,
+    "target_max_single_spin_x": 10000
   },
-  "pseudocode": "ways evaluation, leftmost, k_min=3. After winning evaluation, remove winning symbols, drop columns down, refill from reels, re-evaluate. Repeat until no win. Sum payouts across all cascade rounds. Scalar is auto-tuned to hit target_rtp.",
   "target_rtp": 0.96,
-  "seed": 20260510,
-  "spins": 10000000
+  "rtp_split_target": { "base_pct": 0.40, "free_spins_pct": 0.60 },
+  "scalar": 1.0,
+  "scalar_autotune": true,
+  "seed": 20260511,
+  "spins": 10000000,
+  "pseudocode": "Each spin: re-roll row heights per column from row_distribution. Draw one symbol per (col, row) cell from that column's reel strip. Ways evaluation, leftmost-anchored: for each paying symbol, count occurrences per reel (WILDs substitute); ways_count = product over the k consecutive winning reels (from reel 0) where count>=1; pay paytable[symbol][k] * ways_count, then multiply by current cascade multiplier. After all symbol wins paid: remove winning cells, drop columns, refill from reel strip, regenerate row heights for refilled columns, increment cascade multiplier, re-evaluate. Repeat until no win. 4+ SCAT in initial drop trigger 12 free spins. In FS, multiplier persists and climbs +1 per winning cascade, never resets. Retrigger: 3+ SCAT adds 5 free spins.",
+  "engine_support": "v0.2 (variable-height ways + cascade + scatter + FS climbing multiplier). v0.1 engine cannot run this; JSON spec is decision-ready.",
+  "notes": "MVP #3 = dynamic-grid ways with cascade and persistent FS multiplier. This is the strongest direct answer to Chris's pipeline-mechanism request: it literally is a dynamic grid (variable column heights every spin) with cascade-based anticipation."
 }
