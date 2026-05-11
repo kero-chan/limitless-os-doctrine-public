@@ -1,34 +1,89 @@
 {
   "id": "mvp2",
-  "version": "0.1.0-draft",
-  "grid": { "cols": 7, "rows": [8, 8, 8, 8, 8, 8, 8] },
-  "reels": [
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
-    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]]
-  ],
-  "paytable": {
-    "S1": { "5": 0.5, "10": 5, "15": 25, "20": 100, "25": 500 },
-    "S2": { "5": 0.4, "10": 4, "15": 20, "20":  80, "25": 400 },
-    "S3": { "5": 0.3, "10": 3, "15": 15, "20":  60, "25": 300 },
-    "S4": { "5": 0.2, "10": 2, "15": 10, "20":  40, "25": 200 },
-    "S5": { "5": 0.1, "10": 1, "15":  5, "20":  20, "25": 100 },
-    "S6": { "5": 0.1, "10": 1, "15":  3, "20":  10, "25":  50 },
-    "S7": { "5": 0.1, "10": 1, "15":  2, "20":   5, "25":  25 }
+  "version": "0.2.0-draft",
+  "family": "cluster_cascade",
+  "reference_games": ["Sugar Rush", "Mahjong Ways (cluster mode)"],
+  "grid": { "cols": 7, "rows": [7, 7, 7, 7, 7, 7, 7] },
+  "tile_count": 49,
+  "symbols": {
+    "high": ["T1", "T2", "T3"],
+    "low": ["T4", "T5", "T6", "T7"],
+    "special": ["WILD", "SCAT"]
   },
-  "scalar": 1.0,
+  "reels": [
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]],
+    [["T1",2],["T2",3],["T3",4],["T4",6],["T5",8],["T6",10],["T7",12],["WILD",1],["SCAT",1]]
+  ],
+  "paytable_cluster_bands": {
+    "comment": "Cluster size bands: k=5, k=6-8, k=9-11, k=12-14, k=15+. Payout multiplied by current cascade multiplier.",
+    "T1": { "5": 5,   "6-8": 10,  "9-11": 25, "12-14": 100, "15+": 500 },
+    "T2": { "5": 4,   "6-8": 8,   "9-11": 20, "12-14": 80,  "15+": 400 },
+    "T3": { "5": 3,   "6-8": 6,   "9-11": 15, "12-14": 60,  "15+": 300 },
+    "T4": { "5": 2,   "6-8": 4,   "9-11": 10, "12-14": 40,  "15+": 200 },
+    "T5": { "5": 1,   "6-8": 2,   "9-11": 6,  "12-14": 20,  "15+": 100 },
+    "T6": { "5": 0.5, "6-8": 1.5, "9-11": 4,  "12-14": 12,  "15+": 50  },
+    "T7": { "5": 0.3, "6-8": 1,   "9-11": 2,  "12-14": 6,   "15+": 25  }
+  },
   "evaluation": "cluster",
+  "cluster_connectivity": "4-connected",
   "anchor": "any",
   "k_min": 5,
-  "scatter": { "enabled": false, "counted_in_base": false },
-  "cascade": { "enabled": true, "removal": "winning_only" },
-  "wild": { "enabled": true, "substitutes": ["S1","S2","S3","S4","S5","S6","S7"], "counts_as_win": false },
+  "cascade": {
+    "enabled": true,
+    "removal": "winning_only",
+    "refill": "drop_from_top_using_reel_strip",
+    "multiplier_ladder": {
+      "comment": "Applied to next win in same spin chain. Capped at 10x and sustained.",
+      "levels": [1, 2, 3, 5, 10],
+      "cap": 10,
+      "sustain_at_cap": true
+    }
+  },
+  "scatter": {
+    "enabled": true,
+    "counted_in_base": false,
+    "trigger_count": 6,
+    "trigger_award": { "free_spins": 10 },
+    "retrigger": { "min": 3, "add_free_spins": 5 }
+  },
+  "free_spins": {
+    "enabled": true,
+    "start_multiplier": 2,
+    "multiplier_behavior": "persistent_climbs_one_per_winning_cascade",
+    "reset_on_end": true
+  },
+  "wild": {
+    "enabled": true,
+    "substitutes": ["T1","T2","T3","T4","T5","T6","T7"],
+    "counts_as_win": false,
+    "can_start_cluster": false
+  },
   "bet": { "cost": 1.0, "unit": "per_spin" },
-  "pseudocode": "flood-fill 4-connected clusters of same symbol (with WILD substituting); cluster of size >= k_min pays via paytable; cascade removes winning cells and refills from top; repeat until no wins.",
+  "anticipation_design": {
+    "player_state_map": {
+      "tension": "slow reel deceleration + anticipation stacks before first drop",
+      "initial_relief": "first cascade fires at 1x",
+      "building_hope": "multiplier visibly climbs 2x -> 3x -> 5x",
+      "peak_anticipation": "5+ cascade chain at 10x sustained, sound + screen-shake ramps",
+      "climax": "high-k cluster on T1/T2 at 10x multiplier (single-spin top hit ~5000x bet)",
+      "re_engagement": "free spins climbing multiplier (no reset during FS) loops the loop"
+    },
+    "target_avg_cascades_per_winning_spin": 1.8,
+    "target_p_5plus_cascade": 0.0025,
+    "target_max_single_spin_x": 5000
+  },
   "target_rtp": 0.96,
-  "notes": "MVP #2 draft spec (cluster pays, 7x8 dynamic, cascades on). v0.1 engine supports ways only; this is a JSON-only spec for future v0.2 cluster/cascade support."
+  "rtp_split_target": { "base_pct": 0.40, "free_spins_pct": 0.60 },
+  "scalar": 1.0,
+  "scalar_autotune": true,
+  "seed": 20260511,
+  "spins": 10000000,
+  "pseudocode": "Each spin: drop initial 7x7 grid from reel strips. Flood-fill 4-connected clusters (WILD substitutes but does not start a cluster). Any cluster >= k_min pays via paytable_cluster_bands, multiplied by current cascade multiplier (starts at 1 in base, 2 in FS). After paying, remove all winning tiles and SCAT counted at start; columns drop, refill from top using reel strip. Increment cascade multiplier to next level in ladder; recompute. Repeat until no win. 6+ SCAT in any single drop sequence trigger 10 free spins. In free spins, multiplier persists and climbs +1 per winning cascade, never resets within FS. Retrigger: 3+ SCAT adds 5 free spins.",
+  "engine_support": "v0.2 (cluster + cascade + scatter + FS). v0.1 engine cannot run this; JSON spec is decision-ready.",
+  "notes": "MVP #2 = cluster cascade family (Sugar Rush / Mahjong Ways cluster mode). This is the cascade anticipation deliverable Chris asked for."
 }
