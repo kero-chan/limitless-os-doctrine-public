@@ -1,0 +1,34 @@
+{
+  "id": "mvp2",
+  "version": "0.1.0-draft",
+  "grid": { "cols": 7, "rows": [8, 8, 8, 8, 8, 8, 8] },
+  "reels": [
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]],
+    [["S1",2],["S2",3],["S3",4],["S4",6],["S5",8],["S6",10],["S7",12],["WILD",1]]
+  ],
+  "paytable": {
+    "S1": { "5": 0.5, "10": 5, "15": 25, "20": 100, "25": 500 },
+    "S2": { "5": 0.4, "10": 4, "15": 20, "20":  80, "25": 400 },
+    "S3": { "5": 0.3, "10": 3, "15": 15, "20":  60, "25": 300 },
+    "S4": { "5": 0.2, "10": 2, "15": 10, "20":  40, "25": 200 },
+    "S5": { "5": 0.1, "10": 1, "15":  5, "20":  20, "25": 100 },
+    "S6": { "5": 0.1, "10": 1, "15":  3, "20":  10, "25":  50 },
+    "S7": { "5": 0.1, "10": 1, "15":  2, "20":   5, "25":  25 }
+  },
+  "scalar": 1.0,
+  "evaluation": "cluster",
+  "anchor": "any",
+  "k_min": 5,
+  "scatter": { "enabled": false, "counted_in_base": false },
+  "cascade": { "enabled": true, "removal": "winning_only" },
+  "wild": { "enabled": true, "substitutes": ["S1","S2","S3","S4","S5","S6","S7"], "counts_as_win": false },
+  "bet": { "cost": 1.0, "unit": "per_spin" },
+  "pseudocode": "flood-fill 4-connected clusters of same symbol (with WILD substituting); cluster of size >= k_min pays via paytable; cascade removes winning cells and refills from top; repeat until no wins.",
+  "target_rtp": 0.96,
+  "notes": "MVP #2 draft spec (cluster pays, 7x8 dynamic, cascades on). v0.1 engine supports ways only; this is a JSON-only spec for future v0.2 cluster/cascade support."
+}
