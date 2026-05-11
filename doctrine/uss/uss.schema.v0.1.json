@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kero.io/uss/schema/v0.1",
+  "title": "USS Locked Spec v0.1",
+  "description": "Universal Slot Solver locked spec. Every required field MUST be set. No defaults. No ambiguity. If a spec passes this schema and two independent engines converge within +/- 0.30% RTP, the spec is locked.",
+  "type": "object",
+  "required": ["id","version","grid","reels","paytable","scalar","evaluation","anchor","k_min","scatter","cascade","wild","bet","pseudocode","target_rtp","seed","spins"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^mvp[0-9]+$" },
+    "version": { "type": "string" },
+    "grid": {
+      "type": "object",
+      "required": ["cols","rows"],
+      "properties": {
+        "cols": { "type": "integer", "minimum": 3, "maximum": 8 },
+        "rows": { "type": "array", "items": { "type": "integer", "minimum": 2, "maximum": 8 }, "description": "Per-reel heights. Length must equal cols." }
+      }
+    },
+    "reels": {
+      "type": "array",
+      "description": "One strip per reel. Each strip is an array of [symbol, weight] pairs.",
+      "items": {
+        "type": "array",
+        "items": { "type": "array", "items": [{ "type": "string" }, { "type": "number", "minimum": 0 }], "minItems": 2, "maxItems": 2 }
+      }
+    },
+    "paytable": {
+      "type": "object",
+      "description": "Map of symbol -> map of k -> pay (in bet units, before scalar).",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } }
+    },
+    "scalar": { "type": "number", "minimum": 0, "description": "Multiplier applied to every paytable value." },
+    "evaluation": { "enum": ["ways","lines","cluster"] },
+    "anchor": { "enum": ["leftmost","any","both"] },
+    "k_min": { "type": "integer", "minimum": 2, "description": "Minimum k for a paid hit." },
+    "scatter": { "type": "object", "required": ["enabled","counted_in_base"], "properties": { "enabled": { "type": "boolean" }, "counted_in_base": { "type": "boolean" } } },
+    "cascade": { "type": "object", "required": ["enabled"], "properties": { "enabled": { "type": "boolean" }, "removal": { "enum": ["winning_only","winning_and_adjacent","none"] } } },
+    "wild": { "type": "object", "required": ["enabled","substitutes","counts_as_win"], "properties": { "enabled": { "type": "boolean" }, "substitutes": { "type": "array", "items": { "type": "string" } }, "counts_as_win": { "type": "boolean" } } },
+    "bet": { "type": "object", "required": ["cost","unit"], "properties": { "cost": { "type": "number", "minimum": 0 }, "unit": { "enum": ["per_spin","per_line","per_way"] } } },
+    "pseudocode": { "type": "string", "maxLength": 600 },
+    "target_rtp": { "type": "number", "minimum": 0.5, "maximum": 1.5 },
+    "seed": { "type": "integer" },
+    "spins": { "type": "integer", "minimum": 1000000 }
+  }
+}
