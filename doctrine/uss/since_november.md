@@ -94,11 +94,9 @@ This is the layer that addresses Chris directly: **mechanism + multi-game pipeli
 - #364 [P0 SPEC] Art Bible — Photoreal-Hailuo v1
 - **#365 [P0 ANIM] Duck Hunters Anticipation Beat-Capture v1**
 - **#366 Orchestration Loop — 3 Clean Cycles (Bach lane)**
-- **#367 Chris access unblock — repo + kero.io SSO + .env setup (pre-meeting 2026-05-11)**
 - **#368 [BLOCKER] Dynamic Grid Mechanism — pipeline spike**
 
 ---
-
 ## 7. Public doctrine artifacts (no login required)
 
 These are mirrored so Bach's team and Chris can read without GitHub access:
